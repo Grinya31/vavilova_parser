@@ -1,21 +1,28 @@
 import requests
 from bs4 import BeautifulSoup
-import lxml
 
+headers = {'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/53.0.2785.143 Safari/537.36'}
+ 
 
-url = "https://shop.kerama-marazzi.ru/catalog/santekhnika-kerama-marazzi/"
+def get_card_url():
+    for count in range(1,3):
+        url=f'https://shop.kerama-marazzi.ru/catalog/santekhnika-kerama-marazzi/?PAGEN_1={count}'
+        response=requests.get(url,headers=headers)
+        soup=BeautifulSoup(response.text,'lxml')
+        cat_name=soup.find_all('div',class_="col-md-4 col-sm-6 text-center")
+        for i in cat_name:
+            name ="https://shop.kerama-marazzi.ru"+i.find('a').get('href')
+            yield name
+for card_url in get_card_url():
+    response=requests.get(card_url,headers=headers)
+    soup=BeautifulSoup(response.text,'lxml')
+    tovars=soup.find_all('div',class_="col-xl-3 col-md-4 col-sm-6 mt-3")
+    for i in tovars:
+        name=i.find('a', class_='title').text
+        link="https://shop.kerama-marazzi.ru"+i.find('a',class_='title').get('href')
+        print(link)
+        
 
-response=requests.get(url)
-
-
-soup=BeautifulSoup(response.text,'lxml')
-
-glav_name=soup.find_all('div',class_="col-md-4 col-sm-6 text-center")
-
-for b in glav_name:
-    name=b.find('span',class_="catalog-title")
-    c=[i for i in name]
-    print(c[0])
 
 #data=soup.find('div', class_='col-xl-3 col-md-4 col-sm-6 mt-3')
 #data=soup.find_all('div', class_='col-xl-3 col-md-4 col-sm-6 mt-3')
