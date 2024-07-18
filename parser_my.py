@@ -13,14 +13,21 @@ def get_card_url():
         for i in cat_name:
             name ="https://shop.kerama-marazzi.ru"+i.find('a').get('href')
             yield name
-for card_url in get_card_url():
-    response=requests.get(card_url,headers=headers)
-    soup=BeautifulSoup(response.text,'lxml')
-    tovars=soup.find_all('div',class_="col-xl-3 col-md-4 col-sm-6 mt-3")
-    for i in tovars:
-        name=i.find('a', class_='title').text
-        link="https://shop.kerama-marazzi.ru"+i.find('a',class_='title').get('href')
-        print(link)
+
+def array():
+    for card_url in get_card_url():
+        response=requests.get(card_url,headers=headers)
+        soup=BeautifulSoup(response.text,'lxml')
+        tovars=soup.find_all('div',class_="col-xl-3 col-md-4 col-sm-6 mt-3")
+        for i in tovars:
+            name=i.find('a', class_='title').text
+            link="https://shop.kerama-marazzi.ru"+i.find('a',class_='title').get('href')
+            img_link="https://shop.kerama-marazzi.ru"+i.find('a').get('href')
+            yield name,link,img_link,
+    
+            
+        
+
         
 
 
